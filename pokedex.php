@@ -11,15 +11,7 @@ try {
     // Nos conectamos
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Creamos la tabla automáticamente si no existe (para que no tengas que usar SQL manual)
-    $sql_tabla = "CREATE TABLE IF NOT EXISTS pokemones (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        numero_pokedex INT NOT NULL,
-        nombre VARCHAR(50) NOT NULL,
-        imagen VARCHAR(255) NOT NULL
-    )";
-    $pdo->exec($sql_tabla);
+  $pdo->exec($sql_tabla);
 
 } catch (PDOException $e) {
     die("<h1>Error de conexión:</h1> " . $e->getMessage() . "<br>Asegúrate de crear la base de datos 'pokedex_clase' en phpMyAdmin primero.");
@@ -32,8 +24,6 @@ try {
 // Contamos cuántos pokemones hay guardados
 $stmt = $pdo->query("SELECT COUNT(*) FROM pokemones");
 $cantidad = $stmt->fetchColumn();
-
-// ¡Aquí está el truco! Solo importamos si la tabla está vacía (0 registros)
 if ($cantidad == 0) {
     $api_url = "https://pokeapi.co/api/v2/pokemon?limit=150";
     $json_data = file_get_contents($api_url);
@@ -115,4 +105,5 @@ $pokemones = $consulta->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
 </body>
+
 </html>
