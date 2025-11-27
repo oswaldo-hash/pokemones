@@ -88,7 +88,7 @@ $pokemones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-    <h1>Pokédex de Clase (API + PHP + SQL)</h1>
+
     
     <div class="estado">
         Estado de la Base de Datos: <strong><?php echo count($pokemones); ?></strong> Pokemones registrados.
@@ -107,3 +107,4 @@ $pokemones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+
