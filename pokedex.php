@@ -8,7 +8,6 @@ $user = 'root';
 $pass = '';     
 
 try {
-    // MANTENEMOS ESTO: La conexión es obligatoria [cite: 2]
     $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
@@ -16,26 +15,23 @@ try {
     die("<h1>Error de conexión:</h1> " . $e->getMessage() . "<br>Verifica que la base de datos 'pokedex_clase' exista en phpMyAdmin.");
 }
 
-// ==========================================
-// 2. LÓGICA DE IMPORTACIÓN
-// ==========================================
 
 // Contamos cuántos pokemones hay guardados
 $stmt = $pdo->query("SELECT COUNT(*) FROM pokemones");
-$cantidad = $stmt->fetchColumn(); // [cite: 6]
+$cantidad = $stmt->fetchColumn(); 
 
 // Si la tabla está vacía, usamos la API para llenarla
 if ($cantidad == 0) {
     $api_url = "https://pokeapi.co/api/v2/pokemon?limit=150";
-    $json_data = file_get_contents($api_url); // [cite: 7]
+    $json_data = file_get_contents($api_url);
     $data = json_decode($json_data, true);
 
     if (isset($data['results'])) {
         $insertStmt = $pdo->prepare("INSERT INTO pokemones (numero_pokedex, nombre, imagen) VALUES (:num, :nom, :img)");
         
-        foreach ($data['results'] as $index => $pokemon) { // [cite: 8]
+        foreach ($data['results'] as $index => $pokemon) { 
             $numero = $index + 1;
-            $nombre = ucfirst($pokemon['name']); // [cite: 9]
+            $nombre = ucfirst($pokemon['name']); 
             $imagen = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$numero.png";
 
             $insertStmt->execute([
@@ -45,7 +41,7 @@ if ($cantidad == 0) {
             ]);
         }
         
-        header("Refresh:0"); // Recargar para mostrar datos [cite: 10]
+        header("Refresh:0"); 
         exit;
     }
 }
@@ -63,27 +59,27 @@ $pokemones = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Pokedex Clase</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #efefef; text-align: center; margin: 0; padding: 20px; } /* [cite: 13] */
+        body { font-family: 'Segoe UI', sans-serif; background-color: #efefef; text-align: center; margin: 0; padding: 20px; } 
         .contenedor {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* [cite: 15] */
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
         }
         .tarjeta {
             background: white;
-            border-radius: 15px; /* [cite: 17] */
+            border-radius: 15px; 
             padding: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             transition: transform 0.2s;
             border: 1px solid #ddd;
         }
-        .tarjeta:hover { transform: scale(1.05); border-color: #ffcb05; } /* [cite: 18] */
-        .tarjeta img { width: 100%; max-width: 120px; height: auto; background-color: #f9f9f9; border-radius: 50%; padding: 10px;} /* [cite: 19, 20] */
-        .numero { color: #999; font-weight: bold; font-size: 0.9em; margin-top: 10px; } /* [cite: 20, 21] */
+        .tarjeta:hover { transform: scale(1.05); border-color: #ffcb05; } 
+        .tarjeta img { width: 100%; max-width: 120px; height: auto; background-color: #f9f9f9; border-radius: 50%; padding: 10px;} 
+        .numero { color: #999; font-weight: bold; font-size: 0.9em; margin-top: 10px; } 
         .nombre { font-size: 1.1em; font-weight: bold; color: #333; margin-top: 5px; text-transform: capitalize; }
-        .estado { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px; display: inline-block;} /* [cite: 22, 23] */
+        .estado { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 20px; display: inline-block;} 
     </style>
 </head>
 <body>
@@ -106,3 +102,4 @@ $pokemones = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 </body>
 </html>
+
